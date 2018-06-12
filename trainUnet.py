@@ -31,12 +31,15 @@ def view_layer(model, x, layer_name, cols=5):
     outputs = read_layer(model, x, layer_name)
     display_images([outputs[:,:,i] for i in range(10)], cols=cols)
 
-view_layer(model, myGene, "conv2D_2")
-view_layer(model, myGene, "conv2D_22")
+
 # In[ ]:
 
 
 testGene = testGenerator('Data/aerialsample/test/image')
+
+view_layer(model, testGene, "conv2D_2")
+view_layer(model, testGene, "conv2D_22")
+
 model = unet()
 model.load_weights('unet_aerial.hdf5')
 results = model.predict_generator(testGene, 4, verbose = 1)
