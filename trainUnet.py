@@ -19,6 +19,20 @@ model_checkpoint = ModelCheckpoint('unet_aerial.hdf5', monitor = 'loss', verbose
 model.fit_generator(myGene, steps_per_epoch = 3, epochs = 3, callbacks = [model_checkpoint])
 
 
+def read_layer(model, x, layer_name):
+    """Return the activation values for the specifid layer"""
+    # Create Keras function to read the output of a specific layer
+    get_layer_output = keras.function([model.layers[0].input], [model.get_layer(layer_name).output])
+    outputs = get_layer_output([x])[0]
+    tensor_summary(outputs)
+    return outputs[0]
+
+def view_layer(model, x, layer_name, cols=5):
+    outputs = read_layer(model, x, layer_name)
+    display_images([outputs[:,:,i] for i in range(10)], cols=cols)
+
+view_layer(model, myGene, "conv2D_2")
+view_layer(model, myGene, "conv2D_22")
 # In[ ]:
 
 
