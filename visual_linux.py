@@ -42,8 +42,8 @@ testGene = io.imread('~/Desktop/Insight/Data/aerialsample/5.tif')
 model = unet()
 model.load_weights('unet_aerial.hdf5')
 
-view_layer(model, testGene, "conv2D_2")
-view_layer(model, testGene, "conv2D_22")
+#view_layer(model, testGene, "conv2D_2")
+#view_layer(model, testGene, "conv2D_22")
 
 
 results = model.predict_generator(testGene, 4, verbose = 1)

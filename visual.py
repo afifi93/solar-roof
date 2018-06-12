@@ -8,8 +8,7 @@
 #get_ipython().run_line_magic('run', 'Preprocess.ipynb')
 from Unet_v1 import *
 from Preprocess import *
-import math
-import matplotlib.pyplot as plt
+
 
 # In[ ]:
 
@@ -43,8 +42,8 @@ testGene = io.imread('/Users/JuliaChen/Google Drive/InsightAI/notebook/Data/aeri
 model = unet()
 model.load_weights('unet_aerial.hdf5')
 
-view_layer(model, testGene, "conv2D_2")
-view_layer(model, testGene, "conv2D_22")
+#view_layer(model, testGene, "conv2D_2")
+#view_layer(model, testGene, "conv2D_22")
 
 
 results = model.predict_generator(testGene, 4, verbose = 1)
