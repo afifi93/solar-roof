@@ -18,7 +18,7 @@ from keras import backend as keras
 # In[2]:
 
 
-def unet(pretrained_weights = None, input_size = (4800, 4800, 1)):
+def unet(pretrained_weights = None, input_size = (500, 500, 1)):
         
         inputs = Input(input_size)
         
