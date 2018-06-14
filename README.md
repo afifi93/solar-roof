@@ -26,7 +26,7 @@ The public data set is high resolution (5000x5000) but too big for my local comp
 
 
 # Model
-
+![Unet](http://url/to/unet.png)
 The U-net model code base was inspired by https://github.com/zhixuhao/unet but heavily modified for this project.
 
 # Inference
