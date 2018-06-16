@@ -6,7 +6,7 @@ Is your roof green enough?!
 
 Traditionally, when a customer wants to install solar panels on their house, the company would send out a team to measure the roof dimension and cutomized/find the solar panels that will fit. This back-and-forth takes a lot of time and increases the risk of workers' injury. This project implemented a variation of convolutional neural network, called U-net, to segment individual's roof using aerial/satelite images.
 
-Due to the limited labeled roof images, I implemented a U-net model on segment building with public aerial images. Roof boundary is very close to the building boundray from the top-view. Few modifications will be needed to improve the accuray of roof boundary. 
+Due to the limited labeled roof images, I implemented a U-net model on segment building with public aerial images (https://project.inria.fr/aerialimagelabeling/). Roof boundary is very close to the building boundray from the top-view. Few modifications will be needed to improve the accuray of roof boundary. 
 
 # Installation
 
@@ -21,12 +21,13 @@ Please find the public pre-processed data set for training this model in Data fo
 
 # Preprocessing
 
-Input data were converted to .png format and gray-scale. 
+Input data were RGB images and in PNG format. 
 The public data set is high resolution (5000x5000) but too big to start with to train the MVP model. Therefore, I sliced the originial image evenly into 625 smaller images, resulting 625 (200 * 200) images. The label set was preprocessed the same as training set. 
 
 
 # Model
 ![Unet](https://github.com/julia78118/SolarRoof/blob/master/Unet.jpg)
+
 The U-net model code base was inspired by https://github.com/zhixuhao/unet but heavily modified for this project.
 
 # Inference
