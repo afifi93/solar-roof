@@ -10,12 +10,12 @@ from keras.callbacks import ModelCheckpoint, LearningRateScheduler, History
 # generate input image/label as a set
 # trainGenerator(batch_size, train_path, image_folder, mask_folder)
 data_gen_args = ()
-myGene = trainGenerator(5, '', 'image', 'label', data_gen_args, save_to_dir = None)
+myGene = trainGenerator(50, '', 'images', 'label', data_gen_args, save_to_dir = None)
 
 model = unet()
 model.compile(optimizer = Adam(lr = 1e-4), loss = IoU_loss, metrics = ['accuracy', IoU_coef, IoU_coef_int])
 model_checkpoint = ModelCheckpoint('unet_rgb.hdf5', monitor = 'loss', verbose = 1, save_best_only = True)
-history = model.fit_generator(myGene, steps_per_epoch = 2, epochs = 200, callbacks = [model_checkpoint])
+history = model.fit_generator(myGene, steps_per_epoch = 50, epochs = 300, callbacks = [model_checkpoint])
 
 # Save loss history as txt file
 hist_array = np.array(history.history['loss'])
