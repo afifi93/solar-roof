@@ -106,7 +106,7 @@ def IoU_loss(y_true, y_pred):
     return -K.log(IoU_coef(y_true, y_pred)) + K.binary_crossentropy(y_pred, y_true)
 
 # Generate test set altogether (customize target_size)
-def testGenerator(test_path, num_image = 7, target_size = (256, 256), as_gray = False):
+def testGenerator(test_path, num_image = 54, target_size = (256, 256), as_gray = False):
     for i in range(num_image):
         img = io.imread(os.path.join(test_path,"%d.png"%i),as_gray = as_gray)
         img = preprocess_image_for_model(img)
