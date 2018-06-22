@@ -10,6 +10,7 @@ import shutil
 from keras import backend as K
 import matplotlib.pyplot as plt
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, History, TensorBoard
+from keras.optimizers import Adam, SGD
 
 ## split input to training/validation sets
 base_dir = ''
@@ -20,7 +21,7 @@ destP = base_dir + 'val/label'
 
 filesN = os.listdir(sourceN)
 filesP = os.listdir(sourceP)
-#
+##
 #for f in filesN:
 #    if np.random.rand(1) < 0.01:
 #        shutil.move(sourceN + '/'+ f, destN + '/'+ f)
@@ -40,19 +41,20 @@ mytrain = trainGenerator(32, 'train', 'images', 'label', data_gen_args, save_to_
 # generate validation sets
 myval = valGenerator(32, 'val', 'images', 'label', data_gen_args, save_to_dir = None)
 model = unet()
-model.compile(optimizer = Adam(lr = 1e-4), loss = IoU_loss, metrics = ['binary_crossentropy', IoU_coef_int])
+optimizer = SGD(lr=1e-4, momentum=0.9, nesterov=True)
+model.compile(optimizer = optimizer, loss = IoU_loss, metrics = ['accuracy', 'binary_crossentropy', IoU_coef_int])
 
 # training model
-model_checkpoint = ModelCheckpoint('unet_100.hdf5', monitor = 'loss', verbose = 1, save_best_only = True)
+model_checkpoint = ModelCheckpoint('unet_sgd35.hdf5', monitor = 'loss', verbose = 1, save_best_only = True)
 tb = TensorBoard(log_dir='./logs', write_graph=True, write_images=True)
-history = model.fit_generator(mytrain, steps_per_epoch = (tra_num/32), epochs = 100, callbacks = [model_checkpoint, tb], validation_data = myval, validation_steps=(val_num/32))
+history = model.fit_generator(mytrain, steps_per_epoch = (tra_num/32), epochs = 35, callbacks = [model_checkpoint, tb], validation_data = myval, validation_steps=(val_num/32))
 
 # Save loss/accuracy history as txt file
 #print(history.history.keys())
 train_array = np.array(history.history['loss'])
 val_array = np.array(history.history['val_loss'])
-np.savetxt('loss_history100.txt', train_array, delimiter=',')
-np.savetxt('val_history100.txt', val_array, delimiter=',')
+np.savetxt('loss_history35.txt', train_array, delimiter=',')
+np.savetxt('val_history35.txt', val_array, delimiter=',')
 
 
 # plot history
@@ -69,9 +71,9 @@ np.savetxt('val_history100.txt', val_array, delimiter=',')
 testGene = testGenerator('test')
 
 model = unet()
-model.compile(optimizer = Adam(lr = 1e-4), loss = IoU_loss, metrics = ['binary_crossentropy', IoU_coef_int])
+model.compile(optimizer = optimizer, loss = IoU_loss, metrics = ['accuracy', 'binary_crossentropy', IoU_coef_int])
 # Load pre-trained weights
-model.load_weights('unet_100.hdf5')
+model.load_weights('unet_sgd35.hdf5')
 # Perform inference
 results = model.predict_generator(testGene, 7, verbose = 1)
 
