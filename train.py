@@ -1,84 +1,53 @@
-# This is the main script
-from Unet_v1 import *
-from check_data import *
-from preprocess_train_val import *
-from post import *
-import numpy as np
-import glob
-import os
-import shutil
-from keras import backend as K
-import matplotlib.pyplot as plt
-from keras.callbacks import ModelCheckpoint, LearningRateScheduler, History, TensorBoard
-from keras.optimizers import Adam, SGD
+"""This python file is main running script
+    """
+from keras.callbacks import ModelCheckpoint, TensorBoard
+from keras.optimizers import SGD
+from preprocess import split_train_val, train_generator, valid_generator, test_generator
+from post import jaccard_coef, jaccard_loss, save_history, save_result, draw_boundary
+from Unet import unet
 
-## split input to training/validation sets
-base_dir = ''
-sourceN = base_dir + 'train/images'
-destN = base_dir + 'val/images'
-sourceP = base_dir + 'train/label'
-destP = base_dir + 'val/label'
+# split training and validation sets
+tra_num, val_num = split_train_val(
+    '', 'train/images', 'val/images', 'train/label', 'val/label')
 
-filesN = os.listdir(sourceN)
-filesP = os.listdir(sourceP)
-##
-#for f in filesN:
-#    if np.random.rand(1) < 0.01:
-#        shutil.move(sourceN + '/'+ f, destN + '/'+ f)
-#        shutil.move(sourceP + '/'+ f, destP + '/'+ f)
-print(len(os.listdir(sourceN)))
-print(len(os.listdir(sourceP)))
-print(len(os.listdir(destN)))
-print(len(os.listdir(destP)))
-tra_num = len(os.listdir(sourceN))
-val_num = len(os.listdir(destN))
-#
-## generate input image/label as a set
-## trainGenerator(batch_size, train_path, image_folder, mask_folder)
+# train_generator(batch_size, train_path, image_folder, mask_folder)
 data_gen_args = ()
-mytrain = trainGenerator(32, 'train', 'images', 'label', data_gen_args, save_to_dir = None)
+mytrain = train_generator(32, 'train', 'images', 'label',
+                          data_gen_args, save_to_dir=None)
 
 # generate validation sets
-myval = valGenerator(32, 'val', 'images', 'label', data_gen_args, save_to_dir = None)
+myval = valid_generator(32, 'val', 'images', 'label',
+                        data_gen_args, save_to_dir=None)
 model = unet()
 optimizer = SGD(lr=1e-3, momentum=0.9, nesterov=True)
-model.compile(optimizer = optimizer, loss = IoU_loss, metrics = ['accuracy', 'binary_crossentropy', IoU_coef_int])
+model.compile(optimizer=optimizer, loss=jaccard_loss, metrics=[
+              'accuracy', 'binary_crossentropy', jaccard_coef])
 
 # training model
-model_checkpoint = ModelCheckpoint('unet_sgd70.hdf5', monitor = 'loss', verbose = 1, save_best_only = True)
+model_checkpoint = ModelCheckpoint(
+    'unet_sgd70.hdf5', monitor='loss', verbose=1, save_best_only=True)
 tb = TensorBoard(log_dir='./logs', write_graph=True, write_images=True)
-history = model.fit_generator(mytrain, steps_per_epoch = (tra_num/32), epochs = 70, callbacks = [model_checkpoint, tb], validation_data = myval, validation_steps=(val_num/32))
+history = model.fit_generator(mytrain, steps_per_epoch=(tra_num / 32), epochs=70, callbacks=[
+                              model_checkpoint, tb], validation_data=myval, validation_steps=(val_num / 32))
 
-# Save loss/accuracy history as txt file
-#print(history.history.keys())
-train_array = np.array(history.history['loss'])
-val_array = np.array(history.history['val_loss'])
-np.savetxt('loss_history70.txt', train_array, delimiter=',')
-np.savetxt('val_history70.txt', val_array, delimiter=',')
+save_history(history)
 
-
-# plot history
-# summarize loss history for training and validation
-#plt.plot(history.history['loss'])
-#plt.plot(history.history['val_loss'])
-#plt.title('model loss')
-#plt.ylabel('loss')
-#plt.xlabel('epoch')
-#plt.legend(['train', 'validation'], loc='upper left')
-#plt.show()
-#
 # generate test set; test_path as input
-testGene = testGenerator('test')
+testGene = test_generator('test')
 
 model = unet()
-model.compile(optimizer = optimizer, loss = IoU_loss, metrics = ['accuracy', 'binary_crossentropy', IoU_coef_int])
+model.compile(optimizer=optimizer, loss=jaccard_loss, metrics=[
+              'accuracy', 'binary_crossentropy', jaccard_coef])
+
 # Load pre-trained weights
 model.load_weights('unet_sgd70.hdf5')
+
 # Perform inference
-results = model.predict_generator(testGene, 54, verbose = 1)
+results = model.predict_generator(testGene, 54, verbose=1)
 
 # Save prediction image in the provided path
-saveResult('', results)
-#
-## Post-processing prediction images; input as (pred_file, test_path, original_size)
-##draw_bound(results, 'test', (200, 200))
+save_result('', results)
+
+# Post-processing prediction images
+# Input as (pred_file, test_path, pred_img_size)
+draw_boundary(results, 'test', (256, 256))
