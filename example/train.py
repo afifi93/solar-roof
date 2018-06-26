@@ -2,9 +2,9 @@
     """
 from keras.callbacks import ModelCheckpoint, TensorBoard
 from keras.optimizers import SGD
-from preprocess import split_train_val, train_generator, valid_generator, test_generator
-from post import jaccard_coef, jaccard_loss, save_history, save_result, draw_boundary
-from Unet import unet
+from solar_roof.preprocess import split_train_val, train_generator, valid_generator, test_generator
+from solar_roof.post import jaccard_coef, jaccard_loss, save_history, save_result, draw_boundary
+from solar_roof.Unet import unet
 
 # split training and validation sets
 tra_num, val_num = split_train_val(
