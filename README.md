@@ -21,7 +21,7 @@ pip install -r requirement.txt
 
 Please find the public data set for training this model in datasets folder. 
 
-# Preprocessing
+# Pre-processing
 
 Input data were RGB images and in PNG format. 
 The public data set is high resolution (5000x5000) but too big to start with to train the MVP model. Therefore, I sliced the originial image evenly into 625 smaller images, resulting 625 (200 * 200) images. The label set was preprocessed the same as training set. 
@@ -38,6 +38,10 @@ Pre-trained weights can be downloaded from DropBox (https://www.dropbox.com/s/qk
 Test images can also be found in the datasets folder. 
 Perform via command line
 
-# Postprocessing
+# Post-processing
 
 The boundary will be shown on the original input image
+
+# Packaging
+
+zip file can be found in dist folder
