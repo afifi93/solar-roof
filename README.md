@@ -1,4 +1,4 @@
-# SolarRoof
+# Solar Roof
 
 Is your roof green enough?!
 
