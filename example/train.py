@@ -1,14 +1,13 @@
 """This python file is main running script
-    """
+"""
 from keras.callbacks import ModelCheckpoint, TensorBoard
 from keras.optimizers import SGD
 from solar_roof.preprocess import split_train_val, train_generator, valid_generator, test_generator
 from solar_roof.post import jaccard_coef, jaccard_loss, save_history, save_result, draw_boundary
-from solar_roof.Unet import unet
+from solar_roof.unet import unet
 
 # split training and validation sets
-tra_num, val_num = split_train_val(
-    '', 'train/images', 'val/images', 'train/label', 'val/label')
+tra_num, val_num = split_train_val('', 'train/images', 'val/images', 'train/label', 'val/label')
 
 # train_generator(batch_size, train_path, image_folder, mask_folder)
 data_gen_args = ()
