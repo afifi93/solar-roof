@@ -1,5 +1,5 @@
 """This python file contains all the postprocessing steps after predictions
-    """
+"""
 import cv2
 import glob
 from keras import backend as K
@@ -11,14 +11,16 @@ import skimage.io as io
 
 def jaccard_coef(y_true, y_pred):
     """Intersection area over union (IoU)
-        Args
-        ----
-        y_true : mask array
-        y_pred : predicted array
-        Returns
-        -------
-        average IoU over all images
-        """
+
+    Args
+    ----
+    y_true : mask array
+    y_pred : predicted array
+
+    Returns
+    -------
+    average IoU over all images
+    """
     smooth = 1e-12
     intersection = K.sum(y_true * y_pred)
     sum_ = K.sum(y_true + y_pred)
@@ -28,14 +30,16 @@ def jaccard_coef(y_true, y_pred):
 
 def jaccard_loss(y_true, y_pred):
     """IoU as loss function
-        Args
-        ----
-        y_true : mask array
-        y_pred : predicted array
-        Returns
-        -------
-        loss function
-        """
+
+    Args
+    ----
+    y_true : mask array
+    y_pred : predicted array
+
+    Returns
+    -------
+    loss function
+    """
     return -K.log(jaccard_coef(y_true, y_pred)) + K.binary_crossentropy(y_pred, y_true)
 
 
@@ -43,13 +47,15 @@ def jaccard_loss(y_true, y_pred):
 # print(history.history.keys())
 def save_history(history):
     """Save training loss and validation loss as text files
-        Args
-        ----
-        hist : loss history after each epoch
-        Returns
-        -------
-        Saved text files for training loss and validation loss
-        """
+
+    Args
+    ----
+    hist : loss history after each epoch
+
+    Returns
+    -------
+    Saved text files for training loss and validation loss
+    """
     train_array = np.array(history.history['loss'])
     val_array = np.array(history.history['val_loss'])
     np.savetxt('loss_history70.txt', train_array, delimiter=',')
@@ -58,14 +64,16 @@ def save_history(history):
 
 def save_result(save_path, npyfile):
     """Save predicted image to png file
-        Args
-        ----
-        save_path : desired path to save predicted png image
-        npyfile : output predicted ndarray from model
-        Returns
-        -------
-        Saved png images at desired path
-        """
+
+    Args
+    ----
+    save_path : desired path to save predicted png image
+    npyfile : output predicted ndarray from model
+
+    Returns
+    -------
+    Saved png images at desired path
+    """
     for i, item in enumerate(npyfile):
         img = item[:, :, 0]
         io.imsave(os.path.join(save_path, '%d_pred.png' % i), img)
@@ -73,15 +81,17 @@ def save_result(save_path, npyfile):
 
 def draw_boundary(pred_path, test_path, ori_size):
     """Draw contour around the building
-        Args
-        ----
-        pred_path : path to predicted png images
-        test_path : path to test images
-        ori_size : size of predicted images
-        Returns
-        -------
-        Saved png images with contour around the building on the original test images
-        """
+
+    Args
+    ----
+    pred_path : path to predicted png images
+    test_path : path to test images
+    ori_size : size of predicted images
+
+    Returns
+    -------
+    Saved png images with contour around the building on the original test images
+    """
     pred_list = sorted(glob.glob('*_pred.png'))
     test_list = sorted(glob.glob('*_test.png'))
     for i in range(len(pred_list)):

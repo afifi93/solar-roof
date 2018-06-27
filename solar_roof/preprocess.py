@@ -1,5 +1,5 @@
 """This python file contains all the preprocessing steps before feed into Unet
-    """
+"""
 from keras.preprocessing.image import ImageDataGenerator
 import glob
 import math
@@ -12,19 +12,21 @@ import skimage.transform as trans
 
 def split_train_val(base_dir, train_img, train_mask, val_img, val_mask):
     """Randomly split training data sets into
-        training set (95%) and validation set (5%)
-        Args
-        ----
-        base_dir : base directory of all folders
-        train_img : path to the images folder in training set
-        train_mask : path to the mask folder in training set
-        val_img : path to the images folder in validation set
-        val_mask : path to the mask folder in validation set
-        Returns
-        -------
-        tra_num : number of images in training folder
-        val_num : number of images in validation folder
-        """
+    training set (95%) and validation set (5%)
+
+    Args
+    ----
+    base_dir : base directory of all folders
+    train_img : path to the images folder in training set
+    train_mask : path to the mask folder in training set
+    val_img : path to the images folder in validation set
+    val_mask : path to the mask folder in validation set
+
+    Returns
+    -------
+    tra_num : number of images in training folder
+    val_num : number of images in validation folder
+    """
     sourceN = base_dir + train_img
     destN = base_dir + val_img
     sourceP = base_dir + train_mask
@@ -46,14 +48,16 @@ def split_train_val(base_dir, train_img, train_mask, val_img, val_mask):
 
 def data_is_ok(data, raise_exception=False):
     """Perform a check to ensure the image data is in the correct range
-        Args
-        ----
-        data (np.array) : the image data
-        raise_exception (bool) : raise exception if data is not ok
-        Returns
-        -------
-        (bool) : True if data is OK, otherwise False
-        """
+
+    Args
+    ----
+    data (np.array) : the image data
+    raise_exception (bool) : raise exception if data is not ok
+
+    Returns
+    -------
+    (bool) : True if data is OK, otherwise False
+    """
     try:
         assert data.dtype == np.uint8
         assert data.max() <= 255
@@ -75,19 +79,20 @@ def data_is_ok(data, raise_exception=False):
 
 def image_save_preprocessor(img, report=True):
     """Normalize the image
-        Procedure
-        ---------
-        - Convert higher bit images (16, 10, etc) to 8 bit
-        - Set color channel to the last channel
-        ----
-        Args
-        ----
-        img (np array) : raw image data
-        report (bool) : output a short log on the imported data
-        Returns
-        -------
-        numpy array of cleaned image data with values [0, 255]
-        """
+    Procedure
+    ---------
+    - Convert higher bit images (16, 10, etc) to 8 bit
+    - Set color channel to the last channel
+
+    Args
+    ----
+    img (np array) : raw image data
+    report (bool) : output a short log on the imported data
+
+    Returns
+    -------
+    numpy array of cleaned image data with values [0, 255]
+    """
     data = np.asarray(img)
     if data.ndim == 3:
         # set the color channel to last if in channel_first format
@@ -120,15 +125,17 @@ def image_save_preprocessor(img, report=True):
 
 def preprocess_image_for_model(data, raise_exception=False):
     """Process data in the manner expected by Unet
-        preprocessor That takes a clean image and performs final adjustments
-        before it's feed into a model
-        Args
-        ----
-        data (np.array)
-        Returns
-        -------
-        normalized data of the same shape
-        """
+    preprocessor that takes a clean image and performs final adjustments
+    before it's feed into a model
+
+    Args
+    ----
+    data (np.array)
+
+    Returns
+    -------
+    normalized data of the same shape
+    """
     try:
         data_is_ok(data, raise_exception=True)
     except AssertionError as e:
@@ -149,13 +156,15 @@ def preprocess_image_for_model(data, raise_exception=False):
 
 def adjust_data(img, mask):
     """Adjust data value between [0,1]
-        Args
-        ----
-        img, mask (np.array)
-        Returns
-        -------
-        normalized data of the same shape
-        """
+
+    Args
+    ----
+    img, mask (np.array)
+
+    Returns
+    -------
+    normalized data of the same shape
+    """
     if (np.max(img) > 1):
         img = preprocess_image_for_model(img)
         img = img / 255
@@ -171,24 +180,26 @@ def train_generator(batch_size, train_path, image_folder,
                     mask_save_prefix='mask', save_to_dir=None,
                     target_size=(256, 256), seed=1):
     """Generate training and mask set together
-        Args
-        ----
-        batch_size : number of images in a batch
-        train_path : path to training folder
-        image_folder : path to image folder in training set
-        mask_folder : path to mask folder in training set
-        aug_dict : augmentation argument (optional)
-        image_color_mode : 'rgb' or 'grayscale'
-        mask_color_mode : 'rgb' or 'grayscale'
-        image_save_prefix : prefix for augmented images when save_to_dir = PATH
-        mask_save_prefix : prefix for augmented masks when save_to_dir = PATH
-        save_to_dir : set to PATH if you want to see the generator results
-        target_size : desired image size for Unet
-        seed : Optional random seed for shuffling and transformations
-        Returns
-        -------
-        Tuples of (image, mask) for training set where image is a numpy array containing a batch of images, mask is a numpy array of corresponding labels
-        """
+
+    Args
+    ----
+    batch_size : number of images in a batch
+    train_path : path to training folder
+    image_folder : path to image folder in training set
+    mask_folder : path to mask folder in training set
+    aug_dict : augmentation argument (optional)
+    image_color_mode : 'rgb' or 'grayscale'
+    mask_color_mode : 'rgb' or 'grayscale'
+    image_save_prefix : prefix for augmented images when save_to_dir = PATH
+    mask_save_prefix : prefix for augmented masks when save_to_dir = PATH
+    save_to_dir : set to PATH if you want to see the generator results
+    target_size : desired image size for Unet
+    seed : Optional random seed for shuffling and transformations
+
+    Returns
+    -------
+    Tuples of (image, mask) for training set where image is a numpy array containing a batch of images, mask is a numpy array of corresponding labels
+    """
     image_datagen = ImageDataGenerator(*aug_dict)
     mask_datagen = ImageDataGenerator(*aug_dict)
     image_generator = image_datagen.flow_from_directory(
@@ -224,24 +235,26 @@ def valid_generator(batch_size, val_path, image_folder,
                     mask_save_prefix='mask', save_to_dir=None,
                     target_size=(256, 256), seed=1):
     """Generate validation set
-        Args
-        ----
-        batch_size : number of images in a batch
-        val_path : path to validation folder
-        image_folder : path to image folder in validation set
-        mask_folder : path to mask folder in validation set
-        aug_dict : augmentation argument (optional)
-        image_color_mode : 'rgb' or 'grayscale'
-        mask_color_mode : 'rgb' or 'grayscale'
-        image_save_prefix : prefix for augmented images when save_to_dir = PATH
-        mask_save_prefix : prefix for augmented masks when save_to_dir = PATH
-        save_to_dir : set to PATH if you want to see the generator results
-        target_size : desired image size for Unet
-        seed : Optional random seed for shuffling and transformations
-        Returns
-        -------
-        Tuples of (image, mask) for validation set where image is a numpy array containing a batch of images, mask is a numpy array of corresponding labels
-        """
+
+    Args
+    ----
+    batch_size : number of images in a batch
+    val_path : path to validation folder
+    image_folder : path to image folder in validation set
+    mask_folder : path to mask folder in validation set
+    aug_dict : augmentation argument (optional)
+    image_color_mode : 'rgb' or 'grayscale'
+    mask_color_mode : 'rgb' or 'grayscale'
+    image_save_prefix : prefix for augmented images when save_to_dir = PATH
+    mask_save_prefix : prefix for augmented masks when save_to_dir = PATH
+    save_to_dir : set to PATH if you want to see the generator results
+    target_size : desired image size for Unet
+    seed : Optional random seed for shuffling and transformations
+
+    Returns
+    -------
+    Tuples of (image, mask) for validation set where image is a numpy array containing a batch of images, mask is a numpy array of corresponding labels
+    """
     image_datagen = ImageDataGenerator(*aug_dict)
     mask_datagen = ImageDataGenerator(*aug_dict)
     valimage_generator = image_datagen.flow_from_directory(
@@ -273,16 +286,18 @@ def valid_generator(batch_size, val_path, image_folder,
 
 def test_generator(test_path, num_image=54, target_size=(256, 256), as_gray=False):
     """Generate test set
-        Args
-        ----
-        test_path : path to test folder
-        num_image : number of test images
-        target_size : desired image size for Unet
-        as_gray : True for grayscale image; vice versa
-        Returns
-        -------
-        A numpy array containing a batch of test images
-        """
+
+    Args
+    ----
+    test_path : path to test folder
+    num_image : number of test images
+    target_size : desired image size for Unet
+    as_gray : True for grayscale image; vice versa
+
+    Returns
+    -------
+    A numpy array containing a batch of test images
+    """
     list = sorted(glob.glob('test/*.png'))
     for i in range(len(list)):
         img = io.imread(list[i])
