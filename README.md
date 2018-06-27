@@ -1,4 +1,4 @@
-# SolarRoof
+# Solar Roof
 
 Is your roof green enough?!
 
@@ -21,11 +21,14 @@ pip install -r requirement.txt
 
 Please find the public data set for training this model in datasets folder. 
 
-# Preprocessing
+# Pre-processing
 
 Input data were RGB images and in PNG format. 
 The public data set is high resolution (5000x5000) but too big to start with to train the MVP model. Therefore, I sliced the originial image evenly into 625 smaller images, resulting 625 (200 * 200) images. The label set was preprocessed the same as training set. 
 
+# Example
+
+train.py in the example folder can be served as an template on how to incoporate all functions from sun_roof folder, train the U-net and make inference.
 
 # Model
 ![Unet](https://github.com/julia78118/SolarRoof/blob/master/Unet.jpg)
@@ -38,6 +41,10 @@ Pre-trained weights can be downloaded from DropBox (https://www.dropbox.com/s/qk
 Test images can also be found in the datasets folder. 
 Perform via command line
 
-# Postprocessing
+# Post-processing
 
 The boundary will be shown on the original input image
+
+# Packaging
+
+zip file can be found in dist folder
