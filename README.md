@@ -19,7 +19,7 @@ pip install -r requirement.txt
 
 # Input images
 
-Please find the public data set for training this model in datasets folder. 
+Please find a small part of the public data set for training this model in datasets folder. 
 
 # Pre-processing
 
@@ -47,4 +47,4 @@ The boundary will be shown on the original input image
 
 # Packaging
 
-zip file can be found in dist folder
+Install as single package using pip install setup.py
