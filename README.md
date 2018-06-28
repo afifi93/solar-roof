@@ -8,7 +8,7 @@ Detect and segment objects of interest given an aerial/satellite images.
 
 Today, solar panel installation requires a crew of workers to measure your roof dimensions to create a custom engineered solution. This process is costly and can lead to worker injury. My project automates this process by leveraging satellite images and deep learning segmentation to create accurate traces of roof lines.
 
-Due to the limited labeled roof images, I implemented a U-net model on segmenting building with public [aerial images](https://project.inria.fr/aerialimagelabeling/). Roof boundary is very close to the building boundray from the top-view. Few modifications will be needed to improve the accuray of roof boundary. 
+Due to the limited labeled roof images, I implemented a U-net model on segmenting building with [public aerial images](https://project.inria.fr/aerialimagelabeling/). Roof boundary is very close to the building boundray from the top-view. Few modifications will be needed to improve the accuray of roof boundary. 
 
 Googld slides can be found [here](https://goo.gl/xcTBAW)
 
