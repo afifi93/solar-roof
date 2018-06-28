@@ -10,6 +10,8 @@ Traditionally, when a customer wants to install solar panels on their house, the
 
 Due to the limited labeled roof images, I implemented a U-net model on segment building with public aerial images (https://project.inria.fr/aerialimagelabeling/). Roof boundary is very close to the building boundray from the top-view. Few modifications will be needed to improve the accuray of roof boundary. 
 
+Googld slides can be found [here] (https://goo.gl/xcTBAW)
+
 # Installation
 
 The file, requirement.txt, contains the python package dependencies for this project. Installation can be performed via 
