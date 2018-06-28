@@ -39,7 +39,7 @@ The U-net model code base was inspired by https://github.com/zhixuhao/unet but h
 
 # Inference
 
-Pre-trained weights can be downloaded from [DropBox](https://www.dropbox.com/s/qkpamyh618n0kj9/unet_sgd70.hdf5?dl=0)
+Pre-trained weights can be downloaded from [DropBox](https://www.dropbox.com/s/qkpamyh618n0kj9/unet_sgd70.hdf5?dl=0).
 Test set images can also be found in the `datasets` folder. 
 
 
